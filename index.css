@@ -1,0 +1,14 @@
+#phone button{
+    height: 50px;
+    width: 75px;
+}
+#phone button span{
+    display: block;
+    margin-top: 5px;
+    font-size: 10px;
+}
+#result{
+    width: 225px;
+    height: 25px;
+    margin-left:2px;
+}
