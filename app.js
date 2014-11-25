@@ -16,6 +16,7 @@
         //   clearTimeout(mouseDownEvent);
         //   console.log(mouseDownEvent);
         // }
+
         var button_pressed = $(event.currentTarget).data("value")
         if($previousValue === undefined){
           $previousValue = button_pressed;
