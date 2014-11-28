@@ -1,93 +1,71 @@
   'use strict'
-  var mouseupCount = 0;
+  var mouseupCount = -1;
   var $previousValue;
   var $currentValue;
-  var $previousInputTextValue = $('#result').val();
+  // var $previousInputTextValue = $('#result').val();
   var mouseDownEvent;
+  var clickTimeout;
+  var T9_DATA = {
+    '1': ['a', 'b', 'c'],
+    '2': ['d', 'e', 'f'],
+    '3': ['g', 'h', 'i'],
+    '4': ['j', 'k', 'l'],
+    '5': ['m', 'n', 'o'],
+    '6': ['p', 'q', 'r'],
+    '7': ['s', 't', 'u'],
+    '8': ['v', 'w', 'x'],
+    '9': ['y', 'z', "'"],
+  };
 
   $(document).ready(function(){
-      $("#phone").find("button").mousedown(function(event){
-      });
       $("#phone").find("button").mouseup(function(event){
+        if($currentValue === $(this).data('value')){
+            if( mouseupCount < 3 ){
+              mouseupCount = mouseupCount + 1
+              $('#result').val(t9())
+            }
+            else{
+              mouseupCount = 0
+              $('#result').val(t9())
+            }
+            if(clickTimeout){
+              clearTimeout(clickTimeout);
+              clickTimeout = setTimeout(clearMouseDownEvent, 500)
+            }
+            else{
+              clickTimeout = setTimeout(clearMouseDownEvent, 500)
+            }
+          }else{
+            $currentValue = $(this).data('value')
+            mouseupCount = 0
+            $('#result').val(t9())
+         }
 
-        // console.log("event value", mouseDownEvent);
-        // if(mouseDownEvent) {
-        //   console.log("clear timeout");
-        //   clearTimeout(mouseDownEvent);
-        //   console.log(mouseDownEvent);
-        // }
-        var button_pressed = $(event.currentTarget).data("value")
-        if($previousValue === undefined){
-          $previousValue = button_pressed;
-        }
-        $currentValue = button_pressed;
-        if($previousValue === button_pressed){
-          mouseupCount += 1;
-          // $inputTextValue = $currentValue
-          // $('#result').val($inputTextValue);
-        }
-        else{
-          mouseupCount = 0
-          mouseupCount += 1;
-          $previousValue = $currentValue;
-          // $inputTextValue += $currentValue
-          // $('#result').val($inputTextValue);
-        }
-        if([1,2,3,4,5,6,8].indexOf($currentValue) !== -1){
-          $('#result').val(t9($('#result').val(), clickOn4ValuesButton()));
-        }
-        else if([7,9].indexOf($currentValue) !== -1){
-          $('#result').val(t9($('#result').val(), clickOn5ValuesButton()));
-        }
-        else if($currentValue === '#' || $currentValue === '*' || $currentValue === 0){
-          $('#result').val(t9($('#result').val(), clickOnSingleValueButton()));
-        }
-        // $('#result').val($currentValue);
-        // if([1,2,3,4,5,6,8].indexOf($currentValue) !== -1){
-        //   $('#result').val(t9($('#result').val(), clickOn4ValuesButton()));
-        // }
-        // else if([7,9].indexOf($currentValue) !== -1){
-        //   $('#result').val(t9($('#result').val(), clickOn5ValuesButton()));
-        // }
-        // else if($currentValue === '#' || $currentValue === '*' || $currentValue === 0){
-        //   $('#result').val(t9($('#result').val(), clickOnSingleValueButton()));
-        // }
-        // mouseDownEvent = setTimeout(setInputTextFieldValue, 3000);
-        console.log("afterevent value", mouseDownEvent);
       });
-      // setInterval(clearMouseDownEvent,3500)
-      // setInterval(setInputTextFieldValue, 2000);
-      // setInterval(resetKeyboard, 10000);
   })
 
   function clearMouseDownEvent(){
-    if(mouseDownEvent) {
-      console.log("interal clear timeout");
-      clearTimeout(mouseDownEvent);
-      console.log(mouseDownEvent);
-    }
+    $currentValue = null;
+    mouseupCount = -1
   }
+
+  // function clearMouseDownEvent(){
+  //   if(mouseDownEvent) {
+  //     console.log("interal clear timeout");
+  //     clearTimeout(mouseDownEvent);
+  //     console.log(mouseDownEvent);
+  //   }
+  // }
 
   function setInputTextFieldValue(){
     console.log("text field value:", $previousInputTextValue)
     $('#result').val(t9($('#result').val(),$previousInputTextValue));
     $previousInputTextValue += $('#result').val();
-    // $('#result').val($currentValue);
-    // if([1,2,3,4,5,6,8].indexOf($currentValue) !== -1){
-    //       $('#result').val(t9($('#result').val(), clickOn4ValuesButton()));
-    // }
-    // else if([7,9].indexOf($currentValue) !== -1){
-    //   $('#result').val(t9($('#result').val(), clickOn5ValuesButton()));
-    // }
-    // else if($currentValue === '#' || $currentValue === '*' || $currentValue === 0){
-    //   $('#result').val(t9($('#result').val(), clickOnSingleValueButton()));
-    // }
   };
 
-  function t9(text,button_pressed){
+  function t9(){
     // button_pressed += text;
-    text += button_pressed;
-    return text
+    return $('#result').val().substring(0,($('#result').val().length))+T9_DATA[$currentValue][mouseupCount];
   }
 
 // 1,2,3,4,5,6,8
